@@ -678,8 +678,8 @@ void edificio() {
 	cilindroOxido();
 	glPushMatrix();
 		glTranslated(0, 0, 0.6);
-		//cilindroOxido();
-		cilindroTextura();
+		cilindroOxido();
+		//cilindroTextura();
 
 		glTranslated(-0.8, 0, 0);
 		cilindroOxido();
@@ -841,12 +841,25 @@ void elementosFabrica() {
 }
 
 void cilindroOxido() {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texturas[1]);
+
 	glPushMatrix();
+		glTranslated(7.2, 0, 0);
+		glRotated(-90, 1, 0, 0);
+		quad = gluNewQuadric();
+		gluQuadricTexture(quad, 2);
+		gluCylinder(quad, 0.3, 0.3, 1, 50, 50);
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+
+	/*glPushMatrix();
 		glColor3ub(184, 93, 11);
 		glTranslated(7.2, 0, 0);
 		glRotated(-90, 1, 0, 0);
 		gluCylinder(gluNewQuadric(), 0.3, 0.3, 1, 50, 50);
-	glPopMatrix();
+	glPopMatrix();*/
 
 	glPushMatrix();
 		//glColor3ub(255, 0, 0);
