@@ -25,12 +25,22 @@ void dibujarEjes();
 void tanque();
 void ruedas();
 void cabina();
+void cabinaTextura();
+void lateralesTextura();
+void costadoTextura();
 void tambor();
 void cañon();
 void enemigo();
 //Proyectil
 void bala();
 void estructuraBala();
+//Avion
+void avion();
+void cabinaA();
+void cabinaP();
+void alas();
+void ala();
+void helices();
 //Accesorio Escenario
 void edificio();
 void puertas();
@@ -63,15 +73,30 @@ void loadTextureFromFile(const char* filename, int index);
 void cargarImagenes();
 
 //Medidas camara
-float camaraX = -20, camaraY = 39, camaraZ = 20;
-float angulo = 10, radio = 65, centroY = 0;
+//float camaraX = -20, camaraY = 39, camaraZ = 20;
+//float angulo = 10, radio = 65, centroY = 0;
+
+float camaraX = -20, camaraY = 6.5, camaraZ = 20;
+float angulo = 3, radio = 45, centroY = -2;
+
+//float camaraX = -20, camaraY = 45, camaraZ = -80;
+//float angulo = 4.7, radio = -46, centroY = 28;
 
 const float M_PI = 3.1416;
 
 float posicionZ = 0, deltaZ = 0, anguloRotacion = 0, direccionX = 0, direccionZ = 1;
 float posicionX = 0, velocidadAvance = 0, rotacionCañon = 0;
 float tanqueX = 1, tanqueZ = 1, posTanque = 0, posEnemigo = 0, velocidadTanque = 0.5, velocidadEnemigo = 0.3;
+float posAvion = 200, posAvion2 = 210, posAvion3 = 210, avionZ = 1, velocidadAvion = 0.5;
+float posTanque1 = 200, posTanque2 = 210, posTanque3 = 210;
 bool girar = false, girarEnemigo = false;
+
+bool moviendoArriba = false;
+bool moviendoAbajo = false;
+float velocidadVertical = 0.01;
+
+bool moviendoDerecha = false;
+bool moviendoIzquierda = false;
 
 //Eventos Bala
 float balaX = 0, balaY = 0, balaZ = 0;
@@ -85,7 +110,7 @@ int main(int argc, char* argv[]) {
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE); //Uso para los canales de color
 	glutInitWindowSize(1100, 700); //tamaño de la ventana
 	glutInitWindowPosition(0, 0); //posicion inicial de la ventana
-	glutCreateWindow("EVALUACION T3"); //creamos una ventana
+	glutCreateWindow("EVALUACION FINAL"); //creamos una ventana
 
 	cargarImagenes();
 
@@ -123,7 +148,16 @@ void dibujar() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glClearColor(50 / 255.0, 73 / 255.0, 96 / 255.0, 1); //color de fondo
+	//glClearColor(50 / 255.0, 73 / 255.0, 96 / 255.0, 1); //color de fondo
+	glClearColor(0 / 255.0, 255 / 255.0, 0 / 255.0, 1);
+
+	//Movimiento de la camara vertical sin interrumpir la rotacion
+	if (moviendoIzquierda) {
+		angulo += velocidadVertical;
+	}
+	else if (moviendoDerecha) {
+		angulo -= velocidadVertical;
+	}
 
 	//Configuracion de la camara
 	//gluLookAt(camaraX, camaraY, camaraZ, 0, 0, 0, 0, 1, 0);
@@ -133,7 +167,7 @@ void dibujar() {
 
 	piso();
 	pisoTextura();
-	dibujarEjes();
+	//dibujarEjes();
 
 	//TORRE
 	glPushMatrix();
@@ -482,6 +516,80 @@ void dibujar() {
 		mostrarEnemigo = false;
 	}
 
+	//Inicio tanque
+	//if (posTanque1) {
+	//	tanqueZ = +1;
+	//}
+
+	//posTanque1 -= velocidadTanque * tanqueZ;
+
+	//glPushMatrix();
+	//	glTranslated(0, 0, posTanque1);
+	//	glScaled(0.3, 0.3, 0.3);
+	//	glRotated(180, 0, 1, 0);
+	//	tanque();
+	//glPopMatrix();
+
+	//if (posTanque2) {
+	//	tanqueZ = +1;
+	//}
+
+	//posTanque2 -= velocidadTanque * tanqueZ;
+
+	//glPushMatrix();
+	//	glTranslated(8, 0, posTanque2);
+	//	glScaled(0.3, 0.3, 0.3);
+	//	glRotated(180, 0, 1, 0);
+	//	tanque();
+	//glPopMatrix();
+
+	//if (posTanque3) {
+	//	tanqueZ = +1;
+	//}
+
+	//posTanque3 -= velocidadTanque * tanqueZ;
+
+	//glPushMatrix();
+	//	glTranslated(-8, 0, posTanque3);
+	//	glScaled(0.3, 0.3, 0.3);
+	//	glRotated(180, 0, 1, 0);
+	//	tanque();
+	//glPopMatrix();
+
+	////movimiento avion
+	//if (posAvion) {
+	//	avionZ = +1;
+	//}
+
+	//posAvion -= velocidadAvion * avionZ;
+
+	//glPushMatrix();
+	//	glTranslated(0, 30, posAvion);
+	//	avion();
+	//glPopMatrix();
+
+	//if (posAvion2) {
+	//	avionZ = +1;
+	//}
+
+	//posAvion2 -= velocidadAvion * avionZ;
+
+	//glPushMatrix();
+	//	glTranslated(8, 30, posAvion2);
+	//	avion();
+	//glPopMatrix();
+
+	//if (posAvion3) {
+	//	avionZ = +1;
+	//}
+
+	//posAvion3 -= velocidadAvion * avionZ;
+
+	//glPushMatrix();
+	//	glTranslated(-8, 30, posAvion3);
+	//	avion();
+	//glPopMatrix();
+
 	//posicionZ += deltaZ;
 	posicionX += direccionX * deltaZ;
 	posicionZ += direccionZ * deltaZ;
@@ -503,7 +611,6 @@ void iniciarVentana(int ancho, int alto) {
 void piso() {
 	glPushMatrix();
 		glColor3ub(140, 103, 79);
-		//glColor3ub(255, 255, 255);
 		glTranslated(0, -0.8, 0); //-3
 		glScaled(25, 0.4, 25);
 		glutSolidCube(4);
@@ -516,9 +623,10 @@ void pisoTextura() {
 	
 	glPushMatrix();
 		glBegin(GL_QUADS);
-		glTexCoord2d(0, 20); glVertex3d(-50, 0.01, -50);
-		glTexCoord2d(20, 20); glVertex3d(50, 0.01, -50);
-		glTexCoord2d(20, 0); glVertex3d(50, 0.01, 50);
+		//glColor3ub(0, 255, 0);
+		glTexCoord2d(0, 60); glVertex3d(-50, 0.01, -50);
+		glTexCoord2d(60, 60); glVertex3d(50, 0.01, -50);
+		glTexCoord2d(60, 0); glVertex3d(50, 0.01, 50);
 		glTexCoord2d(0, 0); glVertex3d(-50, 0.01, 50);
 		glEnd();
 	glPopMatrix();
@@ -583,6 +691,27 @@ void cabina() {
 	glPopMatrix();
 
 	glPushMatrix();
+		glTranslated(0, 1.81, 0);
+		cabinaTextura();
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslated(0, 0, 0.01);
+		lateralesTextura();
+
+		glTranslated(0, 0, -10.02);
+		lateralesTextura();
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslated(0.01, 0, 0);
+		costadoTextura();
+
+		glTranslated(-8.02, 0, 0);
+		costadoTextura();
+	glPopMatrix();
+
+	glPushMatrix();
 		glColor3ub(0, 0, 0);
 		glTranslated(0, 3, 4.7);
 		glScaled(4, 1, 1);
@@ -597,26 +726,101 @@ void cabina() {
 	glPopMatrix();
 }
 
-void tambor() {
+void cabinaTextura() {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texturas[2]);
+
 	glPushMatrix();
+		glBegin(GL_QUADS);
+			glColor3ub(255, 255, 255);
+			glTexCoord2d(0, 1); glVertex3d(-4, 2, -5);
+			glTexCoord2d(1, 1); glVertex3d(4, 2, -5);
+			glTexCoord2d(1, 0); glVertex3d(4, 2, 5);
+			glTexCoord2d(0, 0); glVertex3d(-4, 2, 5);
+		glEnd();
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+}
+
+void lateralesTextura() {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texturas[2]);
+
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 1); glVertex3d(-4, 1.2, 5);
+			glTexCoord2d(1, 1); glVertex3d(4, 1.2, 5);
+			glTexCoord2d(1, 0); glVertex3d(4, 3.81, 5);
+			glTexCoord2d(0, 0); glVertex3d(-4, 3.81, 5);
+		glEnd();
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+}
+
+void costadoTextura() {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texturas[2]);
+
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 1); glVertex3d(4, 1.2, -5);
+			glTexCoord2d(1, 1); glVertex3d(4, 1.2, 5);
+			glTexCoord2d(1, 0); glVertex3d(4, 3.81, 5);
+			glTexCoord2d(0, 0); glVertex3d(4, 3.81, -5);
+		glEnd();
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+}
+
+void tambor() {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texturas[2]);
+
+	glPushMatrix();
+		glColor3ub(255, 255, 255);
+		glTranslated(0, 3.5, 0);
+		glRotated(-90, 1, 0, 0);
+		quad = gluNewQuadric();
+		gluQuadricTexture(quad, 2);
+		gluCylinder(quad, 3.5, 3.5, 2.5, 50, 50);
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+
+	/*glPushMatrix();
 		glColor3ub(49, 110, 0);
 		glTranslated(0, 3.5, 0);
 		glRotated(-90, 1, 0, 0);
-		//glRotated(anguloTambor, 1, 0, 0);
 		gluCylinder(gluNewQuadric(), 3.5, 3.5, 2.5, 50, 50);
-	glPopMatrix();
+	glPopMatrix();*/
 
 	glPushMatrix();
+		glColor3ub(62, 58, 46);
 		glTranslated(0, 6, 0);
 		glRotated(-90, 1, 0, 0);
 		gluDisk(gluNewQuadric(), 0, 3.5, 50, 50);
 	glPopMatrix();
 
-	glPushMatrix();
+	/*glPushMatrix();
 		glColor3ub(32, 73, 0);
 		glTranslated(0, 6, 0);
 		glScaled(2, 1, 2);
 		glutSolidSphere(1, 50, 50);
+	glPopMatrix();*/
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texturas[2]);
+
+	glPushMatrix();
+		//glColor3ub(32, 73, 0);
+		glTranslated(0, 6, 0);
+		glScaled(2, 1, 2);
+		quad = gluNewQuadric();
+		gluQuadricTexture(quad,1);
+		gluSphere(quad, 1, 50, 50);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -625,11 +829,24 @@ void tambor() {
 }
 
 void cañon() {
-	glPushMatrix();
+	/*glPushMatrix();
 		glColor3ub(49, 110, 0);
 		glTranslated(0, 5, 0);
 		gluCylinder(gluNewQuadric(), 0.8, 0.8, 10, 50, 50);
+	glPopMatrix();*/
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texturas[2]);
+
+	glPushMatrix();
+		glColor3ub(255, 255, 255);
+		glTranslated(0, 5, 0);
+		quad = gluNewQuadric();
+		gluQuadricTexture(quad, 2);
+		gluCylinder(quad, 0.8, 0.8, 10, 50, 50);
 	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
 }
 
 void edificio() {
@@ -951,8 +1168,59 @@ void caseta() {
 }
 
 void casa() {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texturas[3]);
+	
 	glPushMatrix();
-		glColor3ub(221, 144, 67);
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 1); glVertex3d(-2.25, 3.01, -1.5);
+			glTexCoord2d(1, 1); glVertex3d(2.25, 3.01, -1.5);
+			glTexCoord2d(1, 0); glVertex3d(2.25, 3.01, 1.5);
+			glTexCoord2d(0, 0); glVertex3d(-2.25, 3.01, 1.5);
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 1); glVertex3d(-2.25, 3.01, 1.51);
+			glTexCoord2d(1, 1); glVertex3d(2.25, 3.01, 1.51);
+			glTexCoord2d(1, 0); glVertex3d(2.25, 0, 1.51);
+			glTexCoord2d(0, 0); glVertex3d(-2.25, 0, 1.51);
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 1); glVertex3d(-2.25, 3.01, -1.51);
+			glTexCoord2d(1, 1); glVertex3d(2.25, 3.01, -1.51);
+			glTexCoord2d(1, 0); glVertex3d(2.25, 0, -1.51);
+			glTexCoord2d(0, 0); glVertex3d(-2.25, 0, -1.51);
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 1); glVertex3d(2.26, 3.01, 1.5);
+			glTexCoord2d(1, 1); glVertex3d(2.26, 3.01, -1.5);
+			glTexCoord2d(1, 0); glVertex3d(2.26, 0, -1.5);
+			glTexCoord2d(0, 0); glVertex3d(2.26, 0, 1.5);
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 1); glVertex3d(-2.26, 3.01, 1.5);
+			glTexCoord2d(1, 1); glVertex3d(-2.26, 3.01, -1.5);
+			glTexCoord2d(1, 0); glVertex3d(-2.26, 0, -1.5);
+			glTexCoord2d(0, 0); glVertex3d(-2.26, 0, 1.5);
+		glEnd();
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+	glFlush();
+
+	glPushMatrix();
+		glColor3ub(155, 120, 79);
 		glTranslated(0, 1.5, 0);
 		glScaled(1.5, 1, 1);
 		glutSolidCube(3);
@@ -965,8 +1233,8 @@ void casa() {
 		glutSolidCube(1);
 	glPopMatrix();
 
+	//Escalera
 	glPushMatrix();
-		//glScaled(2, 1, 1);
 		glBegin(GL_TRIANGLES);
 			//glColor3ub(200, 255, 120);
 			glVertex3d(-3, 0, -1.2);
@@ -1001,26 +1269,26 @@ void casa() {
 		glBegin(GL_QUADS);
 			//glColor3ub(226, 160, 105);
 			glColor3ub(125, 82, 65);
-			glVertex3d(-1.8, 0, 1.51);
-			glVertex3d(-1.8, 2, 1.51);
-			glVertex3d(-0.8, 2, 1.51);
-			glVertex3d(-0.8, 0, 1.51);
+			glVertex3d(-1.8, 0, 1.52);
+			glVertex3d(-1.8, 2, 1.52);
+			glVertex3d(-0.8, 2, 1.52);
+			glVertex3d(-0.8, 0, 1.52);
 		glEnd();
 
 		//ventana
 		glBegin(GL_QUADS);
-			glVertex3d(0, 1, 1.51);
-			glVertex3d(0, 2, 1.51);
-			glVertex3d(2, 2, 1.51);
-			glVertex3d(2, 1, 1.51);
+			glVertex3d(0, 1, 1.52);
+			glVertex3d(0, 2, 1.52);
+			glVertex3d(2, 2, 1.52);
+			glVertex3d(2, 1, 1.52);
 		glEnd();
 
 		//puerta
 		glBegin(GL_QUADS);
-			glVertex3d(-1.2, 0, -1.51);
-			glVertex3d(-1.2, 2, -1.51);
-			glVertex3d(1.2, 2, -1.51);
-			glVertex3d(1.2, 0, -1.51);
+			glVertex3d(-1.2, 0, -1.52);
+			glVertex3d(-1.2, 2, -1.52);
+			glVertex3d(1.2, 2, -1.52);
+			glVertex3d(1.2, 0, -1.52);
 		glEnd();
 	glPopMatrix();
 
@@ -1383,6 +1651,70 @@ void estructuraBala() {
 	glPopMatrix();
 }
 
+void avion() {
+	cabinaA();
+	cabinaP();
+	alas();
+	ala();
+	helices();
+}
+
+void cabinaA() {
+	glPushMatrix();
+		glColor3ub(148, 148, 148);
+		glTranslated(0, 2, 0);
+		gluCylinder(gluNewQuadric(), 0.6, 0.6, 3, 50, 50);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslated(0, 2, 3);
+		gluCylinder(gluNewQuadric(), 0.6, 0.2, 3, 50, 50);
+	glPopMatrix();
+}
+
+void cabinaP() {
+	glPushMatrix();
+		glColor3ub(76, 110, 144);
+		glTranslated(0, 2.5, 2);
+		glScaled(1, 1, 2);
+		gluSphere(gluNewQuadric(), 0.5, 50, 50);
+	glPopMatrix();
+}
+
+void alas() {
+	glPushMatrix();
+		glColor3ub(255, 0, 0);
+		glTranslated(0, 1.7, 1.2);
+		glScaled(6, 0.1, 1.2);
+		glutSolidCube(1);
+	glPopMatrix();
+}
+
+void ala() {
+	glPushMatrix();
+		glColor3ub(255, 0, 0);
+		glTranslated(0, 2, 5.7);
+		glScaled(2, 0.1, 0.6);
+		glutSolidCube(1);
+	glPopMatrix();
+
+	glPushMatrix();
+		glColor3ub(255, 0, 0);
+		glTranslated(0, 2.5, 5.7);
+		glScaled(0.1, 1, 0.6);
+		glutSolidCube(1);
+	glPopMatrix();
+}
+
+void helices() {
+	glPushMatrix();
+		glColor3ub(148, 148, 148);
+		glTranslated(0, 2, 0);
+		glScaled(1, 1, 1.2);
+		glutSolidTorus(0.25, 0.36, 50, 50);
+	glPopMatrix();
+}
+
 void dibujarEjes() {
 	glPushMatrix();
 		glLineWidth(3);
@@ -1429,10 +1761,10 @@ void tecladoEspecial(int tecla, int x, int y) {
 	switch (tecla)
 	{
 	case 101:
-		camaraY += 0.5;
+		camaraY += 0.2;
 		break;
 	case 103:
-		camaraY -= 0.5;
+		camaraY -= 0.2;
 		break;
 	case 100:
 		//angulo += 0.5;
@@ -1465,6 +1797,8 @@ bool detectarColision(float balaX, float balaY, float balaZ, float enemigoX, flo
 void cargarImagenes() {
 	loadTextureFromFile("texturas/piso.bmp", 0);
 	loadTextureFromFile("texturas/oxidoMetal.bmp", 1);
+	loadTextureFromFile("texturas/camuflajeTanque.bmp", 2);
+	loadTextureFromFile("texturas/muroTextura.bmp", 3);
 }
 
 void loadTextureFromFile(const char* filename, int index) {
@@ -1504,12 +1838,24 @@ void manejarTecla(unsigned char tecla, int x, int y) {
 		break;
 	case 'q':
 	case 'Q':
-		angulo += 0.5;
+		//angulo += 0.02;
+		moviendoIzquierda = true;
 		break;
 	case 'e':
 	case 'E':
-		angulo -= 0.5;
+		//angulo -= 0.02;
+		moviendoDerecha = true;
 		break;
+	//case 'p':
+	//case 'P':
+	//	camaraY += 0.5;
+	//	//moviendoArriba = true;
+	//	break;
+	//case 'l':
+	//case 'L':
+	//	camaraY -= 0.5;
+	//	//moviendoAbajo = true;
+	//	break;
 	case ' ':
 		disparoActivo = true;
 
@@ -1538,6 +1884,14 @@ void manejarTeclaSoltada(unsigned char tecla, int x, int y) {
 	case 's':
 	case 'S':
 		deltaZ = 0.0; // Detener el movimiento
+		break;
+	case 'q':
+	case 'Q':
+		moviendoIzquierda = false;
+		break;
+	case 'e':
+	case 'E':
+		moviendoDerecha = false;
 		break;
 	}
 }
