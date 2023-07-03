@@ -76,11 +76,14 @@ void cargarImagenes();
 //float camaraX = -20, camaraY = 39, camaraZ = 20;
 //float angulo = 10, radio = 65, centroY = 0;
 
-float camaraX = -20, camaraY = 6.5, camaraZ = 20;
-float angulo = 3, radio = 45, centroY = -2;
+//float camaraX = -20, camaraY = 6.5, camaraZ = 20;
+//float angulo = 3, radio = 45, centroY = -2;
 
-//float camaraX = -20, camaraY = 45, camaraZ = -80;
-//float angulo = 4.7, radio = -46, centroY = 28;
+float camaraX, camaraY = 3.6, camaraZ;
+float angulo = 0, radio = 0, centroY = 3;
+
+//float camaraX = -20, camaraY = 45, camaraZ = -20;
+//float angulo = 7.8, radio = -46, centroY = 28;
 
 const float M_PI = 3.1416;
 
@@ -147,26 +150,33 @@ void dibujar() {
 	inicializarLuces();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	//glClearColor(50 / 255.0, 73 / 255.0, 96 / 255.0, 1); //color de fondo
-	glClearColor(0 / 255.0, 255 / 255.0, 0 / 255.0, 1);
+	glLoadIdentity(); 
+	glClearColor(0 / 255.0, 255 / 255.0, 0 / 255.0, 1); //color de fondo
 
 	//Movimiento de la camara vertical sin interrumpir la rotacion
-	if (moviendoIzquierda) {
+	/*if (moviendoIzquierda) {
 		angulo += velocidadVertical;
 	}
 	else if (moviendoDerecha) {
 		angulo -= velocidadVertical;
-	}
+	}*/
+
+	//Calculamos la posicion de la camara
+	camaraX = posicionX - 5 * sin(anguloRotacion * M_PI / 180);
+	camaraZ = posicionZ - 5 * cos(anguloRotacion * M_PI / 180);
 
 	//Configuracion de la camara
-	//gluLookAt(camaraX, camaraY, camaraZ, 0, 0, 0, 0, 1, 0);
-	gluLookAt(radio * cos(angulo), camaraY, radio * sin(angulo), //posicion de la camara
-		0, centroY, 0,										 //punto de mira
-		0, 1, 0);											//vector de arriba
+	gluLookAt(camaraX, camaraY, camaraZ,	//Posicion de la camara
+		posicionX, centroY, posicionZ,		//Posicion de enfoque(Posicion del vehiculo)
+		0, 1, 0);							//Vector de orientacion
+	
+	
+	//gluLookAt(radio * cos(angulo), camaraY, radio * sin(angulo), //posicion de la camara
+	//	0, centroY, 0,										 //punto de mira
+	//	0, 1, 0);											//vector de arriba
 
 	piso();
-	pisoTextura();
+	//pisoTextura();
 	//dibujarEjes();
 
 	//TORRE
@@ -420,17 +430,18 @@ void dibujar() {
 
 	//TANQUE
 	glPushMatrix();
-		glScaled(0.3, 0.3, 0.3);
+		
 		glTranslated(posicionX, 0, posicionZ);
 		glRotated(anguloRotacion, 0, 1, 0);
+		glScaled(0.3, 0.3, 0.3);
 		tanque();
 	glPopMatrix();
 
 	if (disparoActivo) {
 		glPushMatrix();
-			glScaled(0.3, 0.3, 0.3);
 			glTranslated(balaX, balaY, balaZ);
 			glRotated(anguloRotacion, 0, 1, 0);
+			glScaled(0.3, 0.3, 0.3);
 			bala();
 		glPopMatrix();
 	}
@@ -497,7 +508,7 @@ void dibujar() {
 
 	if (!colisionDetectadaEnemigo) {
 		glPushMatrix();
-			glTranslated(40, 0, posEnemigo);
+			glTranslated(-5, 0, posEnemigo);
 			glScaled(0.3, 0.3, 0.3);
 
 			if (girarEnemigo) {
@@ -1818,11 +1829,11 @@ void manejarTecla(unsigned char tecla, int x, int y) {
 	switch (tecla) {
 	case 'w':
 	case 'W':
-		deltaZ = 0.5; // Velocidad hacia adelante
+		deltaZ = 0.2; // Velocidad hacia adelante
 		break;
 	case 's':
 	case 'S':
-		deltaZ = -0.5; // Velocidad hacia atrás
+		deltaZ = -0.2; // Velocidad hacia atrás
 		break;
 	case 'd':
 	case 'D':
@@ -1860,7 +1871,7 @@ void manejarTecla(unsigned char tecla, int x, int y) {
 		disparoActivo = true;
 
 		balaX = posicionX;
-		balaY = 5;
+		balaY = 1;
 		balaZ = posicionZ;
 
 		/*balaDireccionX = sin(anguloRotacion * PI / 180);
@@ -1885,13 +1896,13 @@ void manejarTeclaSoltada(unsigned char tecla, int x, int y) {
 	case 'S':
 		deltaZ = 0.0; // Detener el movimiento
 		break;
-	case 'q':
-	case 'Q':
-		moviendoIzquierda = false;
-		break;
-	case 'e':
-	case 'E':
-		moviendoDerecha = false;
-		break;
+	//case 'q':
+	//case 'Q':
+	//	moviendoIzquierda = false;
+	//	break;
+	//case 'e':
+	//case 'E':
+	//	moviendoDerecha = false;
+	//	break;
 	}
 }
